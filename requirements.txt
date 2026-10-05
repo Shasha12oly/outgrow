@@ -1,0 +1,2 @@
+# OUTGROW has zero external dependencies (Python stdlib only)
+# This file is required by some deployment platforms but can be empty

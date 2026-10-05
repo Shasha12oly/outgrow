@@ -1,0 +1,41 @@
+# fly.toml - OUTGROW Fly.io configuration
+
+app = "outgrow-app"
+primary_region = "sjc"
+
+[build]
+  # Use Python builder
+  builder = "heroku/builder"
+  buildpacks = ["heroku/python"]
+
+[env]
+  PORT = "8765"
+  OUTGROW_BIND = "0.0.0.0"
+  OUTGROW_DATA_DIR = "/data"
+  PYTHONUNBUFFERED = "true"
+
+[http_service]
+  internal_port = 8765
+  force_https = true
+  auto_stop_machines = false
+  auto_start_machines = true
+  min_machines_running = 1
+  processes = ["app"]
+
+[[vm]]
+  cpu_kind = "shared"
+  cpus = 1
+  memory_mb = 512
+
+# Persistent volume for SQLite database
+[mounts]
+  source = "outgrow_data"
+  destination = "/data"
+
+# Health check
+[[http_service.checks]]
+  interval = "15s"
+  timeout = "5s"
+  grace_period = "10s"
+  method = "GET"
+  path = "/api/ping"
